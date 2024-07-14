@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0px;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url(backImage.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        main{
+            width: 70%;
+            margin: auto;
+            height: 400px;
+            background-image: linear-gradient(skyblue,blue);
+            box-shadow:rgb(84, 83, 83) 24px 24px 8px;
+        }
+        h1{
+            text-align: center;
+            color: yellow;
+            font-family: cursive;
+            text-shadow:black 1px 1px 2px;
+        }
+        dl{
+            max-width: 95%;
+            overflow-wrap: break-word;
+            word-break: break-all;
+            dd{
+                font-style: italic;
+                font-size: large;
+            }
+            dt{
+                font-size: larger;
+                padding-left: 15px;
+                color:blue;
+                font-weight:bolder;
+            }
+        }
+        #timer,#nav{
+            text-align: center;
+            padding: 5px;
+            color: white;
+        }
+        button{
+            background-color: rgb(0, 94, 255);
+            border: none;
+            border-radius: 5px;
+            height: 30px;
+            width: 65px;
+            color: white;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+        button:active{
+            height: 25px;
+            width: 60px;
+        }
+        button:hover{
+            cursor: pointer;
+        }
+        section{
+            display: grid;
+            grid-template-columns: 8fr 4fr;
+        }
+        img{
+            height: 100px; width: 200px;
+        }
+        #timer span{
+            color: red;
+            font-size: xx-large;
+        }
+        @media only screen and (max-width:900px){
+            main{
+                width:90%;
+            }
+            dl{
+                dd{
+                    font-size:20px;
+                }
+                dt{
+                    font-size:25px;
+                }
+            }
+        }
+        @media only screen and (max-width:600px){
+           main{
+            height:fit-content;
+            min-height: 70vh;
+            width:80%;
+           }
+           dl{
+            max-width: 100%;
+           }
+           section{
+            grid-template-columns: 12fr;
+           }
+        }
+        @media only screen and (max-width:200px){
+           dd,dt{
+            font-size:smaller;
+           }
+           img{
+            height: 50px; width: 100px;
+           }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Quize</h1>
+        <section>
+            <dl>
+                <dt></dt>
+                <dd>
+                    <div id="o1"></div>
+                    <div id="o2"></div>
+                    <div id="o3"></div>
+                    <div id="o4"></div>
+                </dd>
+            </dl>
+            <div id="timer"></div>
+        </section>
+        <div id="nav"><button onclick="start()">Start</button></div>
+    </main>
+    <script>
+        var QnA=[['Who painted the "Mona Lisa"?','Leanardo da Vinci','Michelangelo','Raphael','Caravaggio','a'],
+        ['what language is spoken in Brazil?','Portuguese','Spanish','English','French','a'],
+        ['Who directed the movie"Jurassic Park"?','George Lucas','Steven Spielberg','Michael Bay','Stanley Kubrick','b'],
+        ['What is the main ingredient in Hummus?','Potatoes','Lentils','Chickpeas','White Beans','c'],
+        ['Who is the CEO of Tesla?','Jeff Bezos','Mark Zuckerberg','Tim Cook','Elon Musk','d'],
+        ['What is the loudest Animal on Earth?','Lion','Elephant','Blue Whale','Sperm whale','d'],
+        ['What chemical element has the symbole Na?','Neon','Nitrogen','Sodium','Argon','c'],
+        ['Who is know as the father of Indian SuperComputing?','Raghunath Mashelkar','Vijay Bhatkar','Jayant Narlikar','Nandan Nilekani','b'],
+        ['What was the original name of "Twitter" ?','twttr','Twitter','TWTR','Ttr','a'],
+        ['Who is the CEO of the company maintioned in the below picture?<br><img src="google.png">','Satya Narayan Nadella','Sunder Pichai','Mark Elliot Zuckerberg','Arvind Krishna','b']];
+        var score=0;
+        var n=0;
+        var timer;
+        var time=30;
+        var nav=document.getElementById('nav');
+        function start(){
+            dis();
+            nav.innerHTML=`<button onclick='next()'>Next</button>`;
+        }
+        function dis(){
+            if(n<QnA.length){
+                clearInterval(timer);
+            time=30;
+            timer=setInterval(()=>{
+                document.getElementById('timer').innerHTML='Remaining time <span> '+time+'</span>sec.';
+                time--;if(time===-1){next();}
+            },1000);
+            document.querySelector('dt').innerHTML=`Q${n+1}.`+QnA[n][0];
+            document.getElementById('o1').innerHTML=`a.<input type='radio' name='opt' id='a'>`+QnA[n][1];
+            document.getElementById('o2').innerHTML=`b.<input type='radio' name='opt' id='b'>`+QnA[n][2];
+            document.getElementById('o3').innerHTML=`c.<input type='radio' name='opt' id='c'>`+QnA[n][3];
+            document.getElementById('o4').innerHTML=`d.<input type='radio' name='opt' id='d'>`+QnA[n][4];
+            }else{
+                document.querySelector('section').innerHTML='';
+                clearInterval(timer);
+                nav.innerHTML='Your score is '+score+`<br><br><br><button onclick='exit()'>Exit</button>`;
+            }
+        }
+        function next(){
+                if(document.getElementById(QnA[n][5]).checked){score++}
+                n++;
+                dis();
+                if(n===QnA.length-1){nav.innerHTML=`<button onclick='submit()'>Submit</button>`;}
+        }
+        function submit(){
+            if(document.getElementById(QnA[n][5]).checked){score++}
+            document.querySelector('section').innerHTML='';
+            clearInterval(timer);
+            nav.innerHTML='Your score is '+score+`.<br><br><br><button onclick='exit()'>Exit</button>`;
+        }
+        function exit(){
+            window.close();
+            location.reload();
+        }
+    </script>
+</body>
+</html>
